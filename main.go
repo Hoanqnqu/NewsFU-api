@@ -3,14 +3,15 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/joho/godotenv"
-	"github.com/zhenghaoz/gorse/client"
 	"log"
 	"net/http"
 	"news-api/adapter/in/rest"
 	outAdapter "news-api/adapter/out"
 	"news-api/application/domain/service"
 	"os"
+
+	"github.com/joho/godotenv"
+	"github.com/zhenghaoz/gorse/client"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -23,8 +24,8 @@ func main() {
 	ctx := context.Background()
 	connectionString := fmt.Sprintf(
 		"postgres://%s:%s@%s:%s/%s",
-		"postgres",
-		"password",
+		os.Getenv("DB_POSTGRES_USER"),
+		os.Getenv("DB_POSTGRES_PASSWORD"),
 		"localhost",
 		"5432",
 		"postgres",

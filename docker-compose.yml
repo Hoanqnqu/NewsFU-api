@@ -1,12 +1,12 @@
-version: '3.5'
+version: "3.5"
 
 services:
   postgres:
     container_name: postgres_container
     image: postgres
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: NewsFU
+      POSTGRES_PASSWORD: Ho@nqnqu@t1
       PGDATA: /data/postgres
     volumes:
       - postgres:/data/postgres
@@ -15,7 +15,6 @@ services:
     networks:
       - postgres
     restart: unless-stopped
-
 
 networks:
   postgres:
