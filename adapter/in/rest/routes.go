@@ -16,7 +16,12 @@ func AppRouter(
 	commentHandler *CommentHandler) *chi.Mux {
 	router := chi.NewRouter()
 	// for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
-	router.Use(cors.AllowAll().Handler)
+	router.Use(cors.Handler(
+		cors.Options{
+			AllowedOrigins: []string{"newsfu.netlify.app"},
+		},
+	))
+
 	router.Use(Logger)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
