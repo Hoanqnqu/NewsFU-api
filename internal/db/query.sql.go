@@ -421,8 +421,11 @@ SELECT n.id                          AS id,
        n.created_at                  AS created_at,
        n.updated_at                  AS updated_at,
        n.deleted_at                  AS deleted_at,
+       json_agg(hc.category_id::uuid) AS category_ids,
        COALESCE(COUNT(Distinct v.user_id), 0) AS view_count
 FROM news n
+         Left JOIN has_categories hc
+                   ON n.id = hc.news_id
          LEFT JOIN views v ON n.id = v.news_id
 WHERE n.id = ANY ($1::uuid[])
   AND n.deleted_at IS NULL
@@ -451,6 +454,7 @@ type GetNewsByIdsRow struct {
 	CreatedAt   pgtype.Timestamp
 	UpdatedAt   pgtype.Timestamp
 	DeletedAt   pgtype.Timestamp
+	CategoryIds []byte
 	ViewCount   interface{}
 }
 
@@ -475,6 +479,7 @@ func (q *Queries) GetNewsByIds(ctx context.Context, dollar_1 []pgtype.UUID) ([]G
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.DeletedAt,
+			&i.CategoryIds,
 			&i.ViewCount,
 		); err != nil {
 			return nil, err
@@ -499,7 +504,8 @@ SELECT n.id                           AS id,
        n.created_at                   AS created_at,
        n.updated_at                   AS updated_at,
        n.deleted_at                   AS deleted_at,
-       json_agg(hc.category_id::uuid) AS category_ids
+       json_agg(hc.category_id::uuid) AS category_ids,
+       COALESCE(COUNT(Distinct v.user_id), 0)  AS view_count
 FROM news n
          Left JOIN has_categories hc ON n.id = hc.news_id
          join saves s on s.news_id = n.id
@@ -531,6 +537,7 @@ type GetSavesRow struct {
 	UpdatedAt   pgtype.Timestamp
 	DeletedAt   pgtype.Timestamp
 	CategoryIds []byte
+	ViewCount   interface{}
 }
 
 func (q *Queries) GetSaves(ctx context.Context, userID pgtype.UUID) ([]GetSavesRow, error) {
@@ -555,6 +562,7 @@ func (q *Queries) GetSaves(ctx context.Context, userID pgtype.UUID) ([]GetSavesR
 			&i.UpdatedAt,
 			&i.DeletedAt,
 			&i.CategoryIds,
+			&i.ViewCount,
 		); err != nil {
 			return nil, err
 		}

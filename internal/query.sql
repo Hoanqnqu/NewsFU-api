@@ -150,7 +150,8 @@ SELECT n.id                           AS id,
        n.created_at                   AS created_at,
        n.updated_at                   AS updated_at,
        n.deleted_at                   AS deleted_at,
-       json_agg(hc.category_id::uuid) AS category_ids
+       json_agg(hc.category_id::uuid) AS category_ids,
+       COALESCE(COUNT(Distinct v.user_id), 0)  AS view_count
 FROM news n
          Left JOIN has_categories hc ON n.id = hc.news_id
          join saves s on s.news_id = n.id
@@ -278,8 +279,11 @@ SELECT n.id                          AS id,
        n.created_at                  AS created_at,
        n.updated_at                  AS updated_at,
        n.deleted_at                  AS deleted_at,
+       json_agg(hc.category_id::uuid) AS category_ids,
        COALESCE(COUNT(Distinct v.user_id), 0) AS view_count
 FROM news n
+         Left JOIN has_categories hc
+                   ON n.id = hc.news_id
          LEFT JOIN views v ON n.id = v.news_id
 WHERE n.id = ANY ($1::uuid[])
   AND n.deleted_at IS NULL

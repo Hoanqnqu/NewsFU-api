@@ -4,10 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
 	outport "news-api/application/port/out"
 	db "news-api/internal/db"
+
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -277,6 +278,7 @@ func (u *UserAdapter) GetSavedNews(userID string) ([]outport.NewsWithCategory, e
 			return nil, err
 		}
 		sl[i].Categories = categoryIds
+		sl[i].View = convertViewType(v.ViewCount)
 	}
 	return sl, nil
 

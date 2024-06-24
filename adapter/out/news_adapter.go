@@ -283,6 +283,7 @@ func (u *NewsAdapter) GetNewsByIDs(ids []string) ([]outport.NewsWithCategory, er
 		return nil, err
 	}
 	for i, v := range news {
+		var categoryIds []pgtype.UUID
 		sl[i].Author = v.Author
 		sl[i].Content = v.Content
 		sl[i].Description = v.Description
@@ -291,6 +292,12 @@ func (u *NewsAdapter) GetNewsByIDs(ids []string) ([]outport.NewsWithCategory, er
 		sl[i].ImageUrl = v.ImageUrl
 		sl[i].PublishAt = v.PublishAt
 		sl[i].ID = v.ID
+		err = json.Unmarshal(v.CategoryIds, &categoryIds)
+		fmt.Println("CategoryIds:", categoryIds)
+		if err != nil {
+			return nil, err
+		}
+		sl[i].Categories = categoryIds
 		sl[i].View = convertViewType(v.ViewCount)
 	}
 	return sl, nil
