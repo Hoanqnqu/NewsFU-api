@@ -18,7 +18,7 @@ func AppRouter(
 	// for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
 	router.Use(cors.Handler(
 		cors.Options{
-			AllowedOrigins: []string{"newsfu.netlify.app"},
+			AllowedOrigins: []string{"https://*", "http://*"},
 		},
 	))
 
