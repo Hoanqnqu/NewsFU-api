@@ -59,6 +59,12 @@ func (g *CategoriesService) Update(category *inport.UpdateCategoryPayload) error
 }
 
 func (g *CategoriesService) Delete(id string) error {
+	err := g.categoriesPort.Delete(uuid.MustParse(id))
+	if err != nil {
+		return err
+	}
+
+	// return g.recommendationSystem.DeleteCategory(context.Background(), id)
 	//TODO implement me
 	panic("implement me")
 }

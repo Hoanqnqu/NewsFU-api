@@ -2,9 +2,10 @@ package outAdapter
 
 import (
 	"context"
-	"github.com/google/uuid"
 	outport "news-api/application/port/out"
 	db "news-api/internal/db"
+
+	"github.com/google/uuid"
 
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -66,5 +67,9 @@ func (u *CategoryAdapter) Update(category outport.Category) error {
 }
 
 func (u *CategoryAdapter) Delete(id uuid.UUID) error {
-	return nil
+	query := db.New(u.pool)
+	return query.DeleteCategory(context.Background(), pgtype.UUID{
+		Bytes: id,
+		Valid: true,
+	})
 }

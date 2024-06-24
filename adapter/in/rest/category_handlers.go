@@ -113,6 +113,19 @@ func (u *CategoryHandlers) Update(response http.ResponseWriter, request *http.Re
 }
 
 func (u *CategoryHandlers) Delete(response http.ResponseWriter, request *http.Request) {
-	return
-
+	response.Header().Set("Content-Type", "application/json")
+	id := chi.URLParam(request, "id")
+	err := u.categoryUseCase.Delete(id)
+	if err != nil {
+		response.WriteHeader(http.StatusInternalServerError)
+		json.NewEncoder(response).Encode(APIResponse[any]{
+			StatusCode: 500,
+			Message:    "Unknown err",
+		})
+		return
+	}
+	json.NewEncoder(response).Encode(APIResponse[any]{
+		StatusCode: 200,
+		Message:    "Ok",
+	})
 }
