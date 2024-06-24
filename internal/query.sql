@@ -155,6 +155,7 @@ SELECT n.id                           AS id,
 FROM news n
          Left JOIN has_categories hc ON n.id = hc.news_id
          join saves s on s.news_id = n.id
+         LEFT JOIN views v ON n.id = v.news_id
 where s.user_id = $1
   and n.deleted_at is null
 GROUP BY n.id,

@@ -63,8 +63,8 @@ func (g *CategoriesService) Delete(id string) error {
 	if err != nil {
 		return err
 	}
-
+	return nil
 	// return g.recommendationSystem.DeleteCategory(context.Background(), id)
 	//TODO implement me
-	panic("implement me")
+	// panic("implement me")
 }

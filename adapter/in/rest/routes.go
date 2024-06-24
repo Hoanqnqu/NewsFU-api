@@ -18,10 +18,12 @@ func AppRouter(
 	// for more ideas, see: https://developer.github.com/v3/#cross-origin-resource-sharing
 	router.Use(cors.Handler(
 		cors.Options{
-			AllowedOrigins: []string{"https://*", "http://*"},
+			AllowedOrigins:   []string{"https://*", "http://*"},
+			AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+			AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+			AllowCredentials: true,
 		},
 	))
-
 	router.Use(Logger)
 
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
